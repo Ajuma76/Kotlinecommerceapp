@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "145979156755",
+    "project_id": "shoplyte-65a67",
+    "storage_bucket": "shoplyte-65a67.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145979156755:android:850d1d2f958687803a12e6",
+        "android_client_info": {
+          "package_name": "com.example.shoplyte"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145979156755-ugucgqr5b6efidv3mbaui73r2ks6ldkn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7V9pqtE4LyddfObuzv93Zp17mxr5P_Tk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145979156755-ugucgqr5b6efidv3mbaui73r2ks6ldkn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

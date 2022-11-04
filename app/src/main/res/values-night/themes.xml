@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ShopLyte" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!-- Secondary brand color. -->
+        <item name="color">@color/colorThemePink</item>
+        <item name="colorSecondaryVariant">@color/colorThemeOrange</item>
+        <item name="colorOnPrimarySurface">@color/colorPrimaryText</item>
+        <item name="colorOnTertiary">@color/colorSecondryText</item>
+        <item name="colorOnSecondary">@color/ColorWhite</item>
+
+
+<!--        <color name="ColorWhite">#FFFFFFFF</color>-->
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+    </style>
+</resources>
