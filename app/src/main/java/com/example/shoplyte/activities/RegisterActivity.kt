@@ -1,20 +1,27 @@
 package com.example.shoplyte.activities
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.Toast
 import com.example.shoplyte.R
 import com.example.shoplyte.databinding.ActivityRegisterBinding
+import com.example.shoplyte.firestore.FirestoreClass
+import com.example.shoplyte.model.User
+import com.example.shoplyte.util.Constants
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import java.io.IOException
 
 class RegisterActivity : BaseActivity() {
 
@@ -132,34 +139,39 @@ class RegisterActivity : BaseActivity() {
             progress.show()
 
 
-
             val email: String = binding.etEmail.text.toString().trim { it <= ' ' }
             val password: String = binding.etPassword.text.toString().trim { it <= ' ' }
 
             //create an instance and create and register a user with email and password
-
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password).addOnCompleteListener(
                 OnCompleteListener<AuthResult> { task->
 
                     progress.dismiss()
 
                     //if registration is successfully done
-
                     if (task.isSuccessful)
                     {
                         //firebase registered user
-
                         val firebaseUser: FirebaseUser = task.result!!.user!!
 
-                        showErrorSnackBar(
-                            "You are registered successfully. Your user id is ${firebaseUser.uid}",
-                            false)
 
-                        FirebaseAuth.getInstance().signOut()
+                        val user = User(
+                            firebaseUser.uid,
+                            binding.etFirstName.text.toString().trim { it <= ' ' },
+                            binding.etLastName.text.toString().trim { it <= ' ' },
+                            binding.etEmail.text.toString().trim { it <= ' ' }
+                        )
 
+                        FirestoreClass().registerUser(this@RegisterActivity, user)
+
+//                        showErrorSnackBar(
+//                            "You are registered successfully. Your user id is ${firebaseUser.uid}",
+//                            false)
+//                        FirebaseAuth.getInstance().signOut()
 
                     }else
                     {
+                        progress.dismiss()
                         //if registration is not successful, show error message
                         showErrorSnackBar(task.exception!!.message.toString(), true)
                     }
@@ -168,4 +180,44 @@ class RegisterActivity : BaseActivity() {
         }
     }
 
+    fun userRegistrationSuccess ()
+    {
+        Toast.makeText(this@RegisterActivity, resources.getString(R.string.register_success),
+            Toast.LENGTH_LONG).show()
+    }
+
 }
+
+
+//override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//    super.onActivityResult(requestCode, resultCode, data)
+//
+//    if (resultCode == Activity.RESULT_OK)
+//    {
+//        if (resultCode == Constants.PICK_IMAGE_REQUEST_CODE)
+//        {
+//            if (data != null)
+//            {
+//                try
+//                {
+//                    //the uri of the selected image from phone storage
+//                    val selectedImageFileUri = data.data!!
+//
+//                    binding.ivUserPhoto.setImageURI(selectedImageFileUri)
+//                }
+//                catch (e: IOException)
+//                {
+//                    e.printStackTrace()
+//                    Toast.makeText(this@UserProfileActivity, resources.getString(R.string.image_selection_failed),
+//                        Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//        }
+//    }
+//
+//    else if (resultCode == Activity.RESULT_CANCELED)
+//    {
+//        //A log is printed when user close or cancel the image selection
+//        Log.e("Request cancelled", "Image selection cancelled")
+//    }
+

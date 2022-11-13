@@ -6,11 +6,15 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import com.example.shoplyte.R
 import com.example.shoplyte.databinding.ActivityLoginBinding
+import com.example.shoplyte.firestore.FirestoreClass
+import com.example.shoplyte.model.User
+import com.example.shoplyte.util.Constants
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
@@ -41,7 +45,30 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         binding.register.setOnClickListener(this)
     }
 
-    //In login screen, the clickable components are login button, Forgotpassword and register text
+    fun userLoggedInSuccess(user: User){
+
+        //Print the details in the log as follows
+        Log.i("First Name: ", user.firstName)
+        Log.i("Last Name: ", user.lastName)
+        Log.i("Email: ", user.email)
+
+        //Redirect user to main activity after login
+
+        if (user.profileCompleted == 0)
+        {
+            //if the user profile is incomplete, then launch the UserProfileActivity
+            val intent = Intent(this@LoginActivity, UserProfileActivity::class.java)
+            intent.putExtra(Constants.EXTRA_USER_DETAILS, user)
+            startActivity(intent)
+        }
+        else
+        {
+            //redirect User to MainScreen after login
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+        }
+        finish()
+    }
+    //In login screen, the clickable components are login button, Forgot password and register text
 
     override fun onClick(view: View?) {
         if (view != null) {
@@ -99,7 +126,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
             val email: String = binding.etEmail.text.toString().trim { it <= ' ' }
             val password: String = binding.etPassword.text.toString().trim { it <= ' ' }
 
-            //Login Usin FirebaseAuth
+            //Login Using FirebaseAuth
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener { task->
 
                 //hide progress dialog
@@ -107,10 +134,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
 
                 if (task.isSuccessful)
                 {
+                    FirestoreClass().getUserDetails(this@LoginActivity)
 
-                    showErrorSnackBar(
-                        "You are logged in successfully.",
-                        false)
                 } else{
                     //if login is not successful, show error message
                     showErrorSnackBar(task.exception!!.message.toString(), true)

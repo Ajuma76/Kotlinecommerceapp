@@ -18,6 +18,8 @@
     <color name="colorSnackBarSuccess">#8BC34A</color>
     <color name="colorSnackBarError">#FF2500</color>
 
+    <color name="colorLightGrey">#F1F1F1</color>
+
 
 
 </resources>

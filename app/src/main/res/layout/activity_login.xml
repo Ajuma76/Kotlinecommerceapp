@@ -65,8 +65,7 @@
             android:inputType="text"
             android:padding="@dimen/et_padding"
             android:textColor="@color/ColorWhite"
-            android:textSize="@dimen/et_textSize"
-            android:text="abc@gmail.com"/>
+            android:textSize="@dimen/et_textSize"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,8 +89,7 @@
             android:inputType="textPassword"
             android:padding="@dimen/et_padding"
             android:textColor="@color/ColorWhite"
-            android:textSize="@dimen/et_textSize"
-            android:text="123456"/>
+            android:textSize="@dimen/et_textSize"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
