@@ -11,19 +11,19 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
 import com.example.shoplyte.R
 import com.example.shoplyte.databinding.ActivityUserProfileBinding
 import com.example.shoplyte.model.User
 import com.example.shoplyte.util.Constants
+import com.example.shoplyte.util.GlideLoader
 import java.io.IOException
 import java.util.jar.Manifest
 
+@Suppress("DEPRECATION")
 class UserProfileActivity : BaseActivity(), View.OnClickListener {
-
 
     private lateinit var binding: ActivityUserProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +78,7 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
                     {
 //                        showErrorSnackBar("You already have the storage permission!!", false)
 
-                        Constants.showImageChooser(this)
+                        openFileChooser(Constants.PICK_IMAGE_REQUEST_CODE)
                     }
                     else
                     {
@@ -105,7 +105,7 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
 
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                Constants.showImageChooser(this)
+                Constants.showImageChooser(this@UserProfileActivity)
 //                showErrorSnackBar("The storage permission is granted", false)
 
             }
@@ -117,37 +117,51 @@ class UserProfileActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        processResult(resultCode, data)
+        if (resultCode == Activity.RESULT_OK)
+        {
+            if (requestCode == Constants.PICK_IMAGE_REQUEST_CODE)
+            {
+                if (data != null && data.data!=null)
+                {
+                    //the uri of the selected image from phone storage
+                    val selectedImageFileUri = data.data!!
 
-    }
+//                        binding.ivUserPhoto.setImageURI(selectedImageFileUri)
+                    Glide.with(this).load(selectedImageFileUri).into(binding.ivUserPhoto)
 
-    private fun processResult(resultCode: Int, data: Intent?) {
-        when (resultCode) {
-            RESULT_OK -> {
-                if (data != null) {
-                    try {
-                        //the uri of the selected image from phone storage
-                        val selectedImageFileUri = data.data!!
-
-                        binding.ivUserPhoto.setImageURI(selectedImageFileUri)
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                        Toast.makeText(
-                            this@UserProfileActivity,
-                            resources.getString(R.string.image_selection_failed),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                }else{
+                    Toast.makeText(this@UserProfileActivity, resources.getString(R.string.image_selection_failed),
+                        Toast.LENGTH_SHORT).show()
                 }
-
-            }
-            RESULT_CANCELED -> {
-                //A log is printed when user close or cancel the image selection
-                Log.e("Request cancelled", "Image selection cancelled")
+            }else{
+                Toast.makeText(this@UserProfileActivity, "Codes dont match",
+                    Toast.LENGTH_SHORT).show()
             }
         }
+
+        else if (resultCode == Activity.RESULT_CANCELED)
+        {
+            //A log is printed when user close or cancel the image selection
+            Log.e("Request cancelled", "Image selection cancelled")
+            Toast.makeText(this@UserProfileActivity, "Image selection cancelled",
+                Toast.LENGTH_SHORT).show()
+        }
+
     }
+
+    fun openFileChooser(PICK_IMAGE_REQUEST_CODE:Int){
+        val intent = Intent()
+        intent.setType("image/*")
+        intent.setAction(Intent.ACTION_GET_CONTENT)
+        startActivityForResult(intent,PICK_IMAGE_REQUEST_CODE)
+    }
+
+
+
+
 }
